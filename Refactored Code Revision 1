@@ -1,0 +1,105 @@
+package DiceGame;
+
+import java.util.Scanner;
+
+public class DiceGameRefactor {
+	
+static Scanner userInput = new Scanner(System.in);
+	
+static Player player1 = new Player(0);
+static Player player2 = new Player(0);
+	
+static Die die = new Die();
+
+static String userDecision;
+
+	public static void main(String[] args){
+	
+	printOpeningMessage();
+	
+	while(hasNotWon()){
+		takeTurn(player1);
+		if (hasNotWon()){
+			takeTurn(player2);
+		}
+	}
+	
+	printWinningMessage();
+	
+	}
+	
+
+
+public static void printOpeningMessage(){
+	System.out.println("Let's Play PIG....");
+	System.out.println("Player 1 Press r to Roll :");
+}
+
+public static boolean hasNotWon(){
+	if (player1.getScore() < 100 && player2.getScore() < 100){
+		return true;
+	}
+	return false;
+}
+
+public static void taketurn(Player player){
+	userDecision = getUserDecision();
+	if ("r".equalsIgnoreCase(userDecision)){
+		rollDieandAdjustScore(player);		
+	}
+	if ("h".equalsIgnoreCase(userDecision)){
+		printPlayerScoreMessage(player.getScore(), player);
+	}
+}
+
+public static String getUserDecision(){
+	return userInput.next();
+}
+
+public static void rollDieandAdjustScore(Player player){
+	die.trowDice();
+	if (die.getFaceValue() != 1){
+		player.incScore(die.getFaceValue);
+		printRollValue(die.getFaceValue);
+		printChoiceMessage();
+		rollAgainorHold(player);
+	}
+	
+	else{
+		player.setScore(0);
+		printRollValue(1);
+		userDecision = "h";
+	}
+}
+
+public static void rollAgainorHold (Player player){
+	if ("r".equalsIgnoreCase(getUserDecision())){
+		rollDieandAdjustScore(player);
+	}
+	else{
+		userDecision = "h";
+		break;
+	}
+}
+
+public static void printRollValue(int dieValue){
+	System.out.println("You rolled a " + dieValue);
+}
+
+public static void printChoiceMessage(){
+	System.out.println("Press 'r' to Roll Again or 'h' to Hold and Pass On ");
+}
+
+public static void printPlayerScoreMessage(int playerScore, Player player){
+	System.out.println(player.getName()+"'s score is: "+playerScore);
+}
+
+public static void printWinningMessage(){
+	if (player1.getScore() >= 100){
+		System.out.println("Congratulations, " + player1.getName()+ ". You win!!");
+	}
+	else {
+		System.out.println("Congratulations, " + player2.getName() + ". You win!!");
+	}
+}
+}
